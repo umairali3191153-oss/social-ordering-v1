@@ -1,78 +1,76 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { 
-  Float as DreiFloat,
-  Grid,
-  Icosahedron,
-  Octahedron,
-  Box,
-  Edges
+  Points, 
+  PointMaterial, 
+  Float as DreiFloat 
 } from '@react-three/drei';
 import * as THREE from 'three';
-import { useScroll, useTransform } from 'framer-motion';
+import { MotionValue } from 'framer-motion';
 
-const SceneV2: React.FC = () => {
-  const { scrollYProgress } = useScroll();
-  const groupRef = useRef<THREE.Group>(null!);
+const SceneV2Horizontal: React.FC<{ scrollProgress: MotionValue<number> }> = ({ scrollProgress }) => {
+  const pointsRef = useRef<THREE.Points>(null!);
   
-  const rotationY = useTransform(scrollYProgress, [0, 1], [0, Math.PI * 4]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.5, 0.8]);
-  const opacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0.1, 1, 1, 0.1]);
+  const count = 3000;
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 30;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    }
+    return pos;
+  }, []);
 
-  useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y = rotationY.get();
-      groupRef.current.scale.setScalar(scale.get());
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    const scroll = scrollProgress.get();
+    
+    if (pointsRef.current) {
+      // Wave motion based on scroll and time
+      const pos = pointsRef.current.geometry.attributes.position.array as Float32Array;
+      for (let i = 0; i < count; i++) {
+        const x = pos[i * 3];
+        const y = pos[i * 3 + 1];
+        pos[i * 3 + 2] = Math.sin(time * 0.5 + x * 0.1 + y * 0.1 + scroll * 10) * 2;
+      }
+      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+      
+      // Gentle rotation
+      pointsRef.current.rotation.y = time * 0.05 + scroll * 2;
+      pointsRef.current.rotation.x = Math.sin(time * 0.2) * 0.1;
     }
   });
 
   return (
     <>
-      <color attach="background" args={["#f8f8f8"]} />
+      <color attach="background" args={["#050805"]} />
       
-      <ambientLight intensity={1.5} />
-      <directionalLight position={[10, 10, 10]} intensity={1} />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={2} color="#10b981" />
 
-      <group ref={groupRef}>
-        {/* Central Complex Geometry */}
-        <DreiFloat speed={2} rotationIntensity={1}>
-           <Icosahedron args={[2, 1]}>
-             <meshBasicMaterial color="#000000" wireframe transparent opacity={0.05} />
-           </Icosahedron>
-           
-           <Octahedron args={[1.5, 0]}>
-             <meshBasicMaterial color="#000000" wireframe />
-             <Edges color="#bfff00" scale={1.05} />
-           </Octahedron>
+      <DreiFloat speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+        <Points ref={pointsRef} positions={positions} stride={3}>
+          <PointMaterial 
+            color="#10b981" 
+            size={0.05} 
+            sizeAttenuation 
+            transparent 
+            opacity={0.4} 
+            depthWrite={false} 
+            blending={THREE.AdditiveBlending}
+          />
+        </Points>
+      </DreiFloat>
 
-           {/* Orbiting Elements */}
-           {[...Array(6)].map((_, i) => (
-             <group key={i} rotation={[0, (i / 6) * Math.PI * 2, 0]}>
-               <Box position={[4, 0, 0]} args={[0.2, 0.2, 0.2]}>
-                 <meshBasicMaterial color="#bfff00" />
-               </Box>
-             </group>
-           ))}
-        </DreiFloat>
-      </group>
-
-      <group position={[0, -2, 0]}>
-        <Grid 
-          infiniteGrid 
-          sectionSize={1.5} 
-          cellColor="#000000" 
-          sectionColor="#000000" 
-          fadeDistance={40} 
-          cellThickness={0.5} 
-          sectionThickness={1.5}
-        />
-      </group>
-
-      {/* Atmospheric Fog for V2 */}
-      <fog attach="fog" args={["#f8f8f8", 5, 20]} />
+      {/* Atmospheric Glow */}
+      <mesh position={[0, 0, -5]}>
+        <sphereGeometry args={[20, 32, 32]} />
+        <meshBasicMaterial color="#051a0d" side={THREE.BackSide} />
+      </mesh>
     </>
   );
 };
 
-export default SceneV2;
+export default SceneV2Horizontal;

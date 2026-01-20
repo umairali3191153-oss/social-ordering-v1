@@ -2,40 +2,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const HeroV2: React.FC = () => {
+const HeroV2Horizontal: React.FC = () => {
   return (
-    <section className="relative h-screen flex flex-col items-start justify-center px-12 md:px-24 overflow-hidden bg-transparent">
+    <div className="w-full h-full flex flex-col items-center justify-center relative px-12 md:px-48">
+      <div className="absolute left-48 top-1/4 w-32 h-[1px] bg-emerald-500/30"></div>
+      
       <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
-        className="z-10 max-w-5xl"
+        className="z-10 text-center space-y-8"
       >
-        <span className="text-[12px] font-mono uppercase tracking-[0.5em] text-black/40 mb-8 block">Project: Neural Discovery</span>
-        <h1 className="text-7xl md:text-[12rem] font-serif font-black leading-[0.8] mb-12 tracking-tight text-black">
-          SYNQUE<br />
-          <span className="italic">SYSTEMS</span>
+        <span className="text-emerald-500 text-xs font-mono tracking-[0.6em] uppercase block">Protocol_01: Collective intelligence</span>
+        <h1 className="text-8xl md:text-[15rem] font-lexend font-black leading-[0.75] tracking-tighter text-white">
+          THE SOCIAL<br />
+          <span className="text-emerald-500 italic">BRAIN.</span>
         </h1>
-        <div className="flex items-center gap-12">
-            <div className="h-px w-32 bg-black"></div>
-            <p className="text-sm md:text-lg text-black/60 max-w-lg font-mono leading-relaxed uppercase">
-                Synque is a social ordering protocol for information. 
-                Intelligence meets human-centric discovery.
+        
+        <div className="flex flex-col md:flex-row items-center justify-center gap-12 mt-12">
+            <p className="text-lg md:text-xl text-white/40 max-w-lg font-light leading-relaxed text-center uppercase tracking-widest">
+                Reclaiming the web through human curation. Synque connects the world's most curious minds into a single, ordered knowledge engine.
             </p>
         </div>
       </motion.div>
 
       <motion.div 
-        animate={{ opacity: [0.2, 0.5, 0.2] }}
+        animate={{ x: [0, 20, 0] }}
         transition={{ repeat: Infinity, duration: 4 }}
-        className="absolute right-24 bottom-24 hidden md:block"
+        className="absolute bottom-16 right-16 flex items-center gap-4"
       >
-        <div className="text-[10px] font-mono tracking-widest text-black/30 vertical-text" style={{ writingMode: 'vertical-rl' }}>
-           SCROLL_TO_PROCESS_DATA // SYNQUE_VERSION_02
-        </div>
+        <span className="text-[10px] font-mono tracking-widest text-emerald-500">START_DISCOVERY_FLIGHT</span>
+        <div className="w-24 h-[1px] bg-emerald-500/50"></div>
       </motion.div>
-    </section>
+    </div>
   );
 };
 
-export default HeroV2;
+export default HeroV2Horizontal;
