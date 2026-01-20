@@ -12,7 +12,7 @@ const Hero: React.FC = () => {
         className="z-10"
       >
         <h1 className="text-6xl md:text-[10rem] font-orbitron font-black leading-none mb-6 tracking-tighter">
-          MIRAR<br />
+          SYNQUE<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500">
             INTELLIGENCE
           </span>
