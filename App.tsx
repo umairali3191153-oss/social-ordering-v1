@@ -7,10 +7,10 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ContentSection from './components/ContentSection';
 import Scene from './components/Experience';
-import NavbarV2Horizontal from './components/NavbarV2';
-import HeroV2Horizontal from './components/HeroV2';
-import ContentSectionV2Horizontal from './components/ContentSectionV2';
-import SceneV2Horizontal from './components/ExperienceV2';
+import NavbarV2Editorial from './components/NavbarV2';
+import HeroV2Editorial from './components/HeroV2';
+import ContentSectionV2Editorial from './components/ContentSectionV2';
+import SceneV2Editorial from './components/ExperienceV2';
 import SynqueLogo from './components/Logo';
 import { SectionProps } from './types';
 
@@ -94,16 +94,6 @@ const AppV1: React.FC = () => {
             </div>
             <p className="text-white/20 uppercase tracking-[2em] text-[12px] md:text-[14px]">The Social Ordering Protocol</p>
           </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-16 md:gap-40 text-center mt-12">
-            {[{ title: "Product", links: ["Protocol", "Extension", "iOS App"] }, { title: "Company", links: ["Manifesto", "Careers", "Contact"] }, { title: "Community", links: ["Discord", "Twitter", "Curators"] }, { title: "Legal", links: ["Privacy", "Terms", "Guidelines"] }].map((col) => (
-              <div key={col.title} className="space-y-6">
-                <h4 className="text-[10px] uppercase tracking-[0.5em] text-emerald-500 font-black">{col.title}</h4>
-                <ul className="text-xs space-y-4 text-white/30">
-                  {col.links.map(l => <li key={l}><a href="#" className="hover:text-white transition-colors uppercase tracking-widest">{l}</a></li>)}
-                </ul>
-              </div>
-            ))}
-          </div>
         </footer>
       </div>
       <div className="fixed top-0 left-0 w-full h-[2px] bg-white/5 z-50">
@@ -113,65 +103,73 @@ const AppV1: React.FC = () => {
   );
 };
 
-const AppV2Horizontal: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef });
-  
-  const totalSections = SECTIONS.length + 2; 
-  const xTransform = useTransform(scrollYProgress, [0, 1], ["0%", `-${(totalSections - 1) * 100}%`]);
-  const smoothX = useSpring(xTransform, { stiffness: 40, damping: 15 });
+const AppV2Editorial: React.FC = () => {
+  const { scrollYProgress } = useScroll();
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
 
   return (
-    <div ref={containerRef} className="theme-v2-horizontal relative h-[1000vh] font-lexend">
-      <div className="fixed inset-0 z-0 pointer-events-none">
+    <div className="relative bg-[#F8F8F8] min-h-screen text-[#111111] font-lexend overflow-x-hidden selection:bg-[#003CFF] selection:text-white">
+      {/* Refractive 3D Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
         <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 10], fov: 40 }}>
           <Suspense fallback={null}>
-            <SceneV2Horizontal scrollProgress={scrollYProgress} />
+            <SceneV2Editorial scrollProgress={smoothProgress} />
             <Preload all />
           </Suspense>
         </Canvas>
       </div>
 
-      <NavbarV2Horizontal />
+      <NavbarV2Editorial />
 
-      <div className="fixed inset-0 overflow-hidden">
-        <motion.div style={{ x: smoothX }} className="flex h-full w-max">
-          <div className="w-screen h-full flex-shrink-0">
-            <HeroV2Horizontal />
-          </div>
-
+      <main className="relative z-10">
+        <HeroV2Editorial />
+        
+        <div className="max-w-screen-xl mx-auto px-8 md:px-24">
           {SECTIONS.map((section, idx) => (
-            <div key={idx} className="w-screen h-full flex-shrink-0 flex items-center justify-center">
-              <ContentSectionV2Horizontal key={idx} index={idx} {...section} />
-            </div>
+            <ContentSectionV2Editorial key={idx} index={idx} {...section} />
           ))}
+        </div>
 
-          <div className="w-screen h-full flex-shrink-0 flex items-center justify-center bg-black/40 backdrop-blur-3xl px-12 md:px-48">
-             <div className="flex flex-col items-center gap-12 text-center w-full">
-                <SynqueLogo className="w-32 h-32" color="#10b981" />
-                <h2 className="text-8xl md:text-[14rem] font-black tracking-tighter text-white">
-                  SYNQUE<span className="text-emerald-500">_</span>
-                </h2>
-                <div className="flex gap-12 text-white/40 text-xs uppercase tracking-widest font-mono">
-                   <span>Human Curation</span>
-                   <span>•</span>
-                   <span>Social Ranking</span>
-                   <span>•</span>
-                   <span>Digital Sovereignty</span>
-                </div>
-                <div className="w-full max-w-lg h-px bg-white/10" />
-                <p className="text-white/20 text-[10px] tracking-[1em] uppercase">Built for the future of human discovery.</p>
-             </div>
+        <footer className="py-32 px-24 bg-[#111111] text-white rounded-t-[4rem] relative z-20 overflow-hidden">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-16">
+            <div className="space-y-8">
+              <SynqueLogo className="w-16 h-16" color="#ffffff" />
+              <h2 className="text-8xl font-serif italic tracking-tighter">Ordered.</h2>
+              <p className="max-w-md text-white/40 text-lg leading-relaxed font-light">
+                Join the network that reclaim the web from the noise of the automated world.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-24">
+               <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase tracking-widest font-mono text-white/30">Network</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="#" className="hover:text-[#003CFF] transition-colors">Nodes</a></li>
+                    <li><a href="#" className="hover:text-[#003CFF] transition-colors">Ranking</a></li>
+                    <li><a href="#" className="hover:text-[#003CFF] transition-colors">Manifesto</a></li>
+                  </ul>
+               </div>
+               <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase tracking-widest font-mono text-white/30">Connect</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="#" className="hover:text-[#003CFF] transition-colors">X / Twitter</a></li>
+                    <li><a href="#" className="hover:text-[#003CFF] transition-colors">Discord</a></li>
+                    <li><a href="#" className="hover:text-[#003CFF] transition-colors">GitHub</a></li>
+                  </ul>
+               </div>
+            </div>
           </div>
-        </motion.div>
-      </div>
+          <div className="mt-24 pt-12 border-t border-white/5 flex justify-between items-center text-[10px] font-mono text-white/20 tracking-widest uppercase">
+             <span>© 2025 SYNQUE PROTOCOL</span>
+             <span>HUMAN_FIRST_0.1.0</span>
+          </div>
+        </footer>
+      </main>
 
-      <div className="fixed right-12 top-1/2 -translate-y-1/2 h-64 w-[2px] bg-white/5 z-50 overflow-hidden">
-         <motion.div 
-           className="w-full bg-emerald-500 origin-top" 
-           style={{ scaleY: scrollYProgress }} 
-         />
-      </div>
+      {/* Progress Line */}
+      <motion.div 
+        className="fixed left-0 top-0 w-1 bg-[#003CFF] z-[100]"
+        style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
+      />
     </div>
   );
 };
@@ -185,7 +183,7 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
-  return route === '/social-ordering-v2' ? <AppV2Horizontal /> : <AppV1 />;
+  return route === '/social-ordering-v2' ? <AppV2Editorial /> : <AppV1 />;
 };
 
 export default App;

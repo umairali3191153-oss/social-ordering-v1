@@ -2,40 +2,52 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const HeroV2Horizontal: React.FC = () => {
+const HeroV2Editorial: React.FC = () => {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative px-12 md:px-48">
-      <div className="absolute left-48 top-1/4 w-32 h-[1px] bg-emerald-500/30"></div>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        className="z-10 text-center space-y-8"
-      >
-        <span className="text-emerald-500 text-xs font-mono tracking-[0.6em] uppercase block">Protocol_01: Collective intelligence</span>
-        <h1 className="text-8xl md:text-[15rem] font-lexend font-black leading-[0.75] tracking-tighter text-white">
-          THE SOCIAL<br />
-          <span className="text-emerald-500 italic">BRAIN.</span>
-        </h1>
+    <section className="min-h-screen flex flex-col justify-center px-8 md:px-24 pt-32 pb-48">
+      <div className="max-w-screen-xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-end">
         
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 mt-12">
-            <p className="text-lg md:text-xl text-white/40 max-w-lg font-light leading-relaxed text-center uppercase tracking-widest">
-                Reclaiming the web through human curation. Synque connects the world's most curious minds into a single, ordered knowledge engine.
-            </p>
+        <div className="md:col-span-8 space-y-12">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            className="space-y-4"
+          >
+             <span className="text-[10px] font-mono tracking-[1em] text-[#003CFF] uppercase">Introduction // 01</span>
+             <h1 className="text-7xl md:text-[11rem] font-serif leading-[0.85] tracking-tighter text-[#111111]">
+               The Social<br />
+               <span className="italic">Ordering.</span>
+             </h1>
+          </motion.div>
+          
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="text-2xl md:text-3xl font-light text-[#111111]/60 max-w-2xl leading-relaxed"
+          >
+            Reclaiming the digital landscape through human synthesis. A protocol built on the foundation of shared intelligence.
+          </motion.p>
         </div>
-      </motion.div>
 
-      <motion.div 
-        animate={{ x: [0, 20, 0] }}
-        transition={{ repeat: Infinity, duration: 4 }}
-        className="absolute bottom-16 right-16 flex items-center gap-4"
-      >
-        <span className="text-[10px] font-mono tracking-widest text-emerald-500">START_DISCOVERY_FLIGHT</span>
-        <div className="w-24 h-[1px] bg-emerald-500/50"></div>
-      </motion.div>
-    </div>
+        <div className="md:col-span-4 flex flex-col items-end gap-12">
+           <div className="w-full h-[1px] bg-[#111111]/10" />
+           <div className="space-y-6 text-right">
+              <span className="text-[10px] font-mono tracking-widest text-[#111111]/30 block uppercase">Curator Status</span>
+              <div className="text-4xl font-serif italic text-[#111111]">14,802 Active</div>
+           </div>
+           <motion.div 
+             animate={{ y: [0, 10, 0] }}
+             transition={{ repeat: Infinity, duration: 2 }}
+             className="w-8 h-12 rounded-full border border-[#111111]/20 flex items-start justify-center p-2"
+           >
+              <div className="w-1 h-2 bg-[#111111] rounded-full" />
+           </motion.div>
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default HeroV2Horizontal;
+export default HeroV2Editorial;

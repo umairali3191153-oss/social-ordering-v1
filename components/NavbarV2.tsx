@@ -3,39 +3,37 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import SynqueLogo from './Logo';
 
-const NavbarV2Horizontal: React.FC = () => {
+const NavbarV2Editorial: React.FC = () => {
   return (
-    <div className="fixed top-8 left-0 w-full z-[100] flex justify-center px-8 pointer-events-none">
-      <motion.nav 
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex items-center gap-12 px-8 py-3 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full pointer-events-auto"
+    <motion.nav 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className="fixed top-0 left-0 w-full z-[100] px-12 py-8 flex justify-between items-center mix-blend-difference"
+    >
+      <div 
+        className="flex items-center gap-4 cursor-pointer"
+        onClick={() => {
+          window.history.pushState({}, '', '/');
+          window.dispatchEvent(new PopStateEvent('popstate'));
+        }}
       >
-        <div 
-          className="flex items-center gap-3 cursor-pointer group" 
-          onClick={() => {
-            window.history.pushState({}, '', '/');
-            window.dispatchEvent(new PopStateEvent('popstate'));
-          }}
-        >
-          <SynqueLogo className="w-6 h-6 transition-transform group-hover:rotate-12" color="#10b981" />
-          <span className="text-lg font-black tracking-tighter text-white font-lexend">
-            SYNQUE<span className="text-emerald-500">_</span>
-          </span>
-        </div>
-        
-        <div className="hidden md:flex gap-8 items-center">
-           <a href="#" className="text-[10px] font-bold text-white/40 hover:text-emerald-400 uppercase tracking-widest transition-colors">Network</a>
-           <a href="#" className="text-[10px] font-bold text-white/40 hover:text-emerald-400 uppercase tracking-widest transition-colors">Protocol</a>
-           <a href="#" className="text-[10px] font-bold text-white/40 hover:text-emerald-400 uppercase tracking-widest transition-colors">Manifesto</a>
-        </div>
+        <SynqueLogo className="w-8 h-8" color="#ffffff" />
+        <span className="text-2xl font-black tracking-tighter text-white font-lexend uppercase">Synque</span>
+      </div>
 
-        <button className="px-6 py-2 bg-emerald-500 text-black text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all rounded-full">
-          Get Extension
-        </button>
-      </motion.nav>
-    </div>
+      <div className="hidden md:flex gap-12">
+        {['Signal', 'Network', 'Archives'].map(item => (
+          <a key={item} href="#" className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/60 hover:text-white transition-colors">
+            {item}
+          </a>
+        ))}
+      </div>
+
+      <button className="px-10 py-3 bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-[#003CFF] hover:text-white transition-all rounded-sm">
+        Join Early
+      </button>
+    </motion.nav>
   );
 };
 
-export default NavbarV2Horizontal;
+export default NavbarV2Editorial;

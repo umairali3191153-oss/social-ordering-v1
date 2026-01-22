@@ -42,7 +42,7 @@ const Stage: React.FC<StageProps> = ({ children, index, scrollYProgress }) => {
   const scale = useTransform(
     scrollYProgress,
     [start - 0.05, start, peak, end, end + 0.05],
-    [0, 0.8, 1, 0.8, 0]
+    [0.001, 0.8, 1, 0.8, 0.001]
   );
 
   const rotationY = useTransform(
@@ -53,15 +53,16 @@ const Stage: React.FC<StageProps> = ({ children, index, scrollYProgress }) => {
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.scale.setScalar(scale.get());
+      const s = scale.get();
+      ref.current.scale.set(s, s, s);
       ref.current.rotation.y = rotationY.get();
       
       const currentOpacity = opacity.get();
       ref.current.traverse((child) => {
-        if ((child as THREE.Mesh).isMesh) {
-          const mesh = child as THREE.Mesh;
-          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-          materials.forEach((mat) => {
+        const obj = child as any;
+        if (obj.isMesh || obj.isPoints || obj.isLine) {
+          const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+          materials.forEach((mat: any) => {
             if (mat) {
               mat.transparent = true;
               mat.opacity = currentOpacity;
@@ -81,7 +82,15 @@ const Stage: React.FC<StageProps> = ({ children, index, scrollYProgress }) => {
 
 const Scene: React.FC = () => {
   const { scrollYProgress } = useScroll();
-  const stage3Positions = useMemo(() => new Float32Array(Array.from({length: 4000}, () => (Math.random() - 0.5) * 12)), []);
+  // Ensure length is a multiple of 3 to avoid NaN in buffer attributes
+  const stage3Positions = useMemo(() => {
+    const count = 1500; // 1500 * 3 = 4500 elements
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < positions.length; i++) {
+      positions[i] = (Math.random() - 0.5) * 12;
+    }
+    return positions;
+  }, []);
 
   return (
     <>

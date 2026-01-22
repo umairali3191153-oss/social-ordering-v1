@@ -1,76 +1,53 @@
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { 
-  Points, 
-  PointMaterial, 
-  Float as DreiFloat 
-} from '@react-three/drei';
+import { MeshTransmissionMaterial, Float as DreiFloat, Icosahedron } from '@react-three/drei';
 import * as THREE from 'three';
 import { MotionValue } from 'framer-motion';
 
-const SceneV2Horizontal: React.FC<{ scrollProgress: MotionValue<number> }> = ({ scrollProgress }) => {
-  const pointsRef = useRef<THREE.Points>(null!);
-  
-  const count = 3000;
-  const positions = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 30;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
-    }
-    return pos;
-  }, []);
+const SceneV2Editorial: React.FC<{ scrollProgress: MotionValue<number> }> = ({ scrollProgress }) => {
+  const meshRef = useRef<THREE.Mesh>(null!);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     const scroll = scrollProgress.get();
     
-    if (pointsRef.current) {
-      // Wave motion based on scroll and time
-      const pos = pointsRef.current.geometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < count; i++) {
-        const x = pos[i * 3];
-        const y = pos[i * 3 + 1];
-        pos[i * 3 + 2] = Math.sin(time * 0.5 + x * 0.1 + y * 0.1 + scroll * 10) * 2;
-      }
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
-      
-      // Gentle rotation
-      pointsRef.current.rotation.y = time * 0.05 + scroll * 2;
-      pointsRef.current.rotation.x = Math.sin(time * 0.2) * 0.1;
+    if (meshRef.current) {
+      meshRef.current.rotation.x = time * 0.2 + scroll * 5;
+      meshRef.current.rotation.y = time * 0.3 + scroll * 2;
     }
   });
 
   return (
     <>
-      <color attach="background" args={["#050805"]} />
+      <color attach="background" args={["#F8F8F8"]} />
       
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={2} color="#10b981" />
+      <ambientLight intensity={1.5} />
+      <directionalLight position={[10, 10, 5]} intensity={2} />
+      <pointLight position={[-10, -10, -10]} intensity={1} color="#003CFF" />
 
-      <DreiFloat speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-        <Points ref={pointsRef} positions={positions} stride={3}>
-          <PointMaterial 
-            color="#10b981" 
-            size={0.05} 
-            sizeAttenuation 
-            transparent 
-            opacity={0.4} 
-            depthWrite={false} 
-            blending={THREE.AdditiveBlending}
+      <DreiFloat speed={2} rotationIntensity={0.5} floatIntensity={1}>
+        <Icosahedron ref={meshRef} args={[4, 0]}>
+          <MeshTransmissionMaterial 
+            backside
+            samples={4}
+            thickness={2}
+            roughness={0}
+            chromaticAberration={0.5}
+            anisotropy={0.3}
+            distortion={0.5}
+            distortionScale={0.5}
+            temporalDistortion={0.1}
+            color="#ffffff"
+            attenuationDistance={0.5}
+            attenuationColor="#ffffff"
           />
-        </Points>
+        </Icosahedron>
       </DreiFloat>
 
-      {/* Atmospheric Glow */}
-      <mesh position={[0, 0, -5]}>
-        <sphereGeometry args={[20, 32, 32]} />
-        <meshBasicMaterial color="#051a0d" side={THREE.BackSide} />
-      </mesh>
+      <gridHelper args={[50, 50, "#111111", "#111111"]} position={[0, -10, 0]} opacity={0.05} transparent />
     </>
   );
 };
 
-export default SceneV2Horizontal;
+export default SceneV2Editorial;
